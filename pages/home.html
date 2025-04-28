@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="home.css"/>
+    <title>Document</title>
+</head>
+<body>
+    <div class="navbar">
+        <h3>DATA</h3>
+       <a href="home">SHOW DETAILS</a>
+       <a href="/addproduct">ADD DETAILS</a>
+    </div>
+    <div id="updata-data">
+      <form id="addproducts" class="update-details">
+        <label>Student Name :</label>
+        <input type="text" id="name" required placeholder="enter student name"/><br/>
+        <label> Student Course :</label>
+        <input type="text" id="course" required placeholder="enter student course"/><br/>
+        <label>Student MobileNo :</label>
+        <input type="number" id="mobile" required placeholder="enter student mobile no"/><br/>
+        <button type="submit">Add</button>
+    </form>
+    </div>
+    <div class="body-section">
+     <h2>STUDENTS DETAILS</h2>
+     <table>
+        <thead>
+            <tr>
+                <td>Student Name</td>
+                <td>Student Course</td>
+                <td>Student Mobileno</td>
+                <td>Update</td>
+                <td>Delete</td>
+            </tr>
+        </th>
+        <tbody id="product-details">
+      
+        </tbody>
+     </table>
+    </div>
+    
+    <script>
+        
+        let results=document.getElementById("product-details")
+        var details;
+       let res= fetch("http://localhost:8000/display")
+       .then((res)=> res.json())
+      .then((data)=>{
+        details=data;
+        for(let i=0;i<details.length;i++){
+           let tr=document.createElement("tr")
+          tr=`
+        <td>${details[i].name}</td>
+        <td>${details[i].course}</td>
+        <td>${details[i].mobile}</td>
+        <td><button id="update" onclick="update1(${details[i].mobile})">Update</button></td>
+      <td><button id="delete" onclick="delete1(${details[i].mobile})">Delete</button></td>
+           `
+           results.insertAdjacentHTML("beforeend",tr)
+    }
+      })  
+
+
+      function update1(mobile){
+        const form=document.getElementById("addproducts")
+        let display1=document.getElementById("updata-data");
+        display1.style.display="block"
+        const productdetails={}
+        form.addEventListener("input",(event)=>{
+            const value=event.target.value
+            const id=event.target.id
+            productdetails[id]=value
+        })
+        productdetails.id=mobile;
+        form.addEventListener("submit",(event)=>{
+         event.preventDefault();
+         console.log(productdetails)
+         fetch("/update",{
+                method:"post",
+                headers:{"content-type":"application/json"},
+                body:JSON.stringify(productdetails)
+            }).then((response)=>response.json())
+            .then((data)=>{
+                alert(data.message)
+            })
+            .catch(error=>console.log(error))
+          display1.style.display="none"
+        })
+       // productdetails.id=mobile;
+        // form.addEventListener("submit",(event)=>{
+        //     event.preventDefault()
+        //     fetch("/update",{
+        //         method:"post",
+        //         headers:{"content-type":"application/json"},
+        //         body:JSON.stringify(productdetails)
+        //     }).then((response)=>response.json())
+        //     .then((data)=>{
+        //         alert(data.message)
+        //     })
+        //     .catch(error=>console.log(error))
+        // })
+
+      }
+      function delete1(mobile){
+        fetch("/delete",{
+            method:"POST",
+            headers:{"content-type":"application/json"},
+            body:JSON.stringify(mobile)
+        }).then(data=>data.json())
+        .then((data)=>{
+            alert(data.message)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+      }
+    </script>
+</body>
+</html>
