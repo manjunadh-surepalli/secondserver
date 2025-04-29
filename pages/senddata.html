@@ -12,7 +12,7 @@
        <a href="home">STUDENTS DETAILS</a>
        <a href="/addproduct">ADD DETAILS</a>
     </div>
-    <form id="addproducts">
+    <form id="addproductdetails">
         <label>Student Name :</label>
         <input type="text" id="name" required placeholder="enter student name"/><br/>
         <label> Student Course :</label>
@@ -22,7 +22,7 @@
         <button type="submit">Add</button>
     </form>
     <script>
-        const form=document.getElementById("addproducts")
+        const form=document.getElementById("addproductdetails")
         const productdetails={}
         form.addEventListener("input",(event)=>{
             const value=event.target.value
@@ -40,6 +40,7 @@
                 alert(data.message)
             })
             .catch(error=>console.log(error))
+            console.log("manjunadh")
         })
     </script>
 </body>
